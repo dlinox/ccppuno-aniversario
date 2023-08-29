@@ -110,35 +110,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in desserts" :key="item.name">
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.serie }}</td>
+                            <tr v-for="item in sales" :key="item.id">
+                                <td>
+                                    {{
+                                        `${item.client.documentNumber}  | ${item.client.name} ${item.client.paternalSurname} ${item.client.maternalSurname}`
+                                    }}
+                                </td>
 
-                                <td>{{ item.type }}</td>
+                                <td>{{ item.vouchers[0].code }}</td>
 
-                                <td>S/. {{ item.amount }}</td>
+                                <td>HABIL</td>
+
+                                <td>S/. {{ item.vouchers[0].amount }}</td>
 
                                 <td>
-                                    <v-btn variant="tonal">{{
-                                        item.status
-                                    }}</v-btn>
-                                    <v-btn icon density="comfortable">
-                                        <v-icon>mdi-dots-vertical</v-icon>
-                                        <v-menu activator="parent">
-                                            <v-list>
-                                                <v-list-item
-                                                    v-for="(
-                                                        item, index
-                                                    ) in items"
-                                                    :key="index"
-                                                    :value="index"
-                                                >
-                                                    <v-list-item-title>{{
-                                                        item.title
-                                                    }}</v-list-item-title>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-menu>
+                                    <v-btn variant="tonal"> pendiente </v-btn>
+                                    <v-btn
+                                        icon
+                                        density="comfortable"
+                                        @click="showDetails(item)"
+                                    >
+                                        <v-icon>mdi-eye</v-icon>
                                     </v-btn>
                                 </td>
                             </tr>
@@ -147,37 +139,121 @@
                 </v-card-item>
             </v-card>
         </v-container>
+
+        <v-dialog v-model="dialogDetails" width="auto">
+            <v-card>
+                <v-toolbar title="Cliente" density="compact" />
+                <v-row>
+                    <v-col cols="12">
+                        <v-list-item subtitle="Nombre y apellidos">
+                            <v-list-item-title>
+                                {{
+                                    `${details.client.documentNumber}  | ${details.client.name} ${details.client.paternalSurname} ${details.client.maternalSurname}`
+                                }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-list-item subtitle="Celular">
+                            <v-list-item-title>
+                                {{ `${details.client.phoneNumber}` }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-list-item subtitle="Correo">
+                            <v-list-item-title>
+                                {{ `${details.client.email}` }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-col>
+                </v-row>
+
+                <v-toolbar title="Boletos" density="compact" />
+                <v-row>
+                    <v-col cols="12" v-for="deta in details.sale_details">
+                        <v-list-item
+                            :title="
+                                deta.ticketId === 1
+                                    ? 'HABILES'
+                                    : 'INHABILES / PUBLICO EN GENERAL'
+                            "
+                            :subtitle="`Cant.:${deta.quantity} | Importe.:${deta.amount} `"
+                        />
+                    </v-col>
+                </v-row>
+
+                <v-toolbar title="Voucher" density="compact" />
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <v-list-item subtitle="Serie">
+                            <v-list-item-title>
+                                {{ `${details.vouchers[0].code}` }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-list-item subtitle="Importe">
+                            <v-list-item-title>
+                                {{ `${details.vouchers[0].amount}` }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-col>
+
+                    <v-col cols="12">
+                        <v-list-item subtitle="Fecha de pago">
+                            <v-list-item-title>
+                                {{ `${details.vouchers[0].date}` }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-col>
+                </v-row>
+
+                <v-card-actions class="px-5">
+                    <v-btn color="red" @click="dialog = false">
+                        Rechazar
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="green"
+                        variant="flat"
+                        @click="validatePaument(details, 'ACEPTADO')"
+                    >
+                        Aceptar
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </AdminLayout>
 </template>
 <script setup>
 import { ref } from "vue";
 import AdminLayout from "../../layouts/AdminLayout.vue";
+import { router } from "@inertiajs/vue3";
 
-const desserts = [
-    {
-        name: "124578 - JUAN PERES",
-        serie: "12456464",
-        status: "Pendiente",
-        type: "HABIL",
-        amount: 20,
+const props = defineProps({
+    sales: {
+        default: [],
+        type: Array,
     },
+});
 
-    {
-        name: "789654 - MABEL PAREDES",
-        serie: "12456464",
-        status: "Pendiente",
-        type: "HABIL",
-        amount: 20,
-    },
+const dialogDetails = ref(false);
+const details = ref(null);
 
-    {
-        name: "326514 - DANIELA JUAREZ",
-        serie: "12456464",
-        status: "Pendiente",
-        type: "INHABIL OTROS",
-        amount: 50,
-    },
-];
+const showDetails = (item) => {
+    details.value = null;
+    details.value = item;
+    dialogDetails.value = true;
+};
 
-const items = [{ title: "Aprobar" }, { title: "Rechazar" }];
+const validatePaument = (item, status) => {
+    let data = {
+        saleId: item.id,
+        newStatus: status,
+    };
+    router.post("/a/pagos/validar", data);
+
+    dialogDetails.value = false;
+};
 </script>

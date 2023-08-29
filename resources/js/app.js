@@ -5,6 +5,7 @@ import { createInertiaApp, router } from "@inertiajs/vue3";
 import NProgress from "nprogress";
 import vuetify from "@/plugins/vuetify/vuetify";
 
+import "vue-advanced-cropper/dist/style.css";
 router.on("start", () => NProgress.start());
 router.on("finish", () => NProgress.done());
 

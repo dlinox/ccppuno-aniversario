@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SupervisorController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,7 +19,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Admin/index');
+    return Inertia::render('index');
 });
 
 Route::name('auth.')->prefix('')->group(function () {
@@ -30,10 +31,15 @@ Route::name('auth.')->prefix('')->group(function () {
 Route::middleware('auth')->name('a.')->prefix('a')->group(function () {
     Route::get('', [AdminController::class, 'index'])->name('index');
     Route::get('/pagos', [AdminController::class, 'payments'])->name('payments');
+    Route::post('/pagos/validar', [AdminController::class, 'validatePayment'])->name('validate.payment');
     Route::get('/configuraciones', [AdminController::class, 'settings'])->name('settings');
 });
 
 
-Route::middleware('auth')->name('s.')->prefix('s')->group(function () {
+Route::name('s.')->prefix('s')->group(function () {
     Route::get('', [SupervisorController::class, 'index'])->name('index'); //Dasboard
 });
+
+
+Route::resource('sales', SalesController::class);
+Route::post('/success', [SalesController::class, 'success'])->name('success');

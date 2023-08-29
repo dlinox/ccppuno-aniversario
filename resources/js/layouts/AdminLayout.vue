@@ -1,6 +1,11 @@
 <template>
     <v-app id="inspire">
-        <v-navigation-drawer v-model="drawer">
+        <v-navigation-drawer v-model="drawer" theme="dark">
+            <v-card variant="tonal">
+                <v-card-item class="text-center">
+                    <img width="180" class="pa-1" src="/logo-white.png" />
+                </v-card-item>
+            </v-card>
             <v-list v-model="menuCurrent" nav density="compact">
                 <v-list-item
                     v-for="(item, i) in menu"
@@ -22,11 +27,17 @@
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
             <v-app-bar-title>Administrador</v-app-bar-title>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="red"
+                append-icon="mdi-logout"
+                size="small"
+                @click="router.delete('/sign-out')"
+            >
+                Salir
+            </v-btn>
         </v-app-bar>
         <v-main>
-
-    
-
             <slot />
         </v-main>
     </v-app>
@@ -57,7 +68,7 @@ const menu = [
 
 const goToPage = (item) => {
     router.visit(item.to, {
-        preserveState: true
+        preserveState: true,
     });
 };
 </script>

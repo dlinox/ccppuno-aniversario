@@ -5,22 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SaleDetail extends Model
+class Voucher extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'quantity',
-        'amount',
+        'image',
+        'code',
         'date',
+        'amount',
         'saleId',
-        'ticketId',
     ];
 
     protected $casts = [
-        'quantity' => 'integer',
+        'date' => 'date',
         'amount' => 'decimal:2',
-        'date' => 'datetime',
     ];
 
     // Relación con el modelo Sale
@@ -28,11 +27,4 @@ class SaleDetail extends Model
     {
         return $this->belongsTo(Sale::class, 'saleId');
     }
-
-    // Relación con el modelo Ticket
-    public function ticket()
-    {
-        return $this->belongsTo(Ticket::class, 'ticketId');
-    }
-    
 }
