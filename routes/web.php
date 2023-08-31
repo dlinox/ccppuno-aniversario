@@ -43,3 +43,7 @@ Route::name('s.')->prefix('s')->group(function () {
 
 Route::resource('sales', SalesController::class);
 Route::post('/success', [SalesController::class, 'success'])->name('success');
+
+Route::get('/share', [SalesController::class, 'share'])->name('share');
+Route::post('/download', [SalesController::class, 'download'])->name('download');
+Route::get('/download/{token}', [SalesController::class, 'downloadPDF'])->name('downloadPDF');

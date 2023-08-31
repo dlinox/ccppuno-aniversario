@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('control_tickets', function (Blueprint $table) {
             $table->id();
             $table->string('token')->unique();
-            $table->date('useIn');
+            $table->date('usedIn')->nullable()->default(null);
             $table->string('ip', 50)->nullable();
             $table->string('userAgent')->nullable();
+            $table->boolean('isUsed')->default(0);
             $table->unsignedBigInteger('userId');
             $table->unsignedBigInteger('clientId');
             $table->unsignedBigInteger('saleId');

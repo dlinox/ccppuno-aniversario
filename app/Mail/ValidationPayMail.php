@@ -12,18 +12,21 @@ use Illuminate\Queue\SerializesModels;
 class ValidationPayMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $sale;
+    public $client;
+    public $tickets;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($sale, $client, $tickets)
     {
         //
+        $this->sale = $sale;
+        $this->client = $client;
+        $this->tickets = $tickets;
     }
 
-    /**
-     * Get the message envelope.
-     */
+
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -31,13 +34,16 @@ class ValidationPayMail extends Mailable
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
+
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.validatePay',
+            with: [
+                'sale' => $this->sale,
+                'client' => $this->client,
+                'tickets' => $this->tickets
+            ]
         );
     }
 

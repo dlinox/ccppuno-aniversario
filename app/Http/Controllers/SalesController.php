@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
+use PDF;
+
 class SalesController extends Controller
 {
     public function store(SaleRequest $request)
@@ -93,5 +95,54 @@ class SalesController extends Controller
         return Inertia::render('success', [
             'email' => $request->email,
         ]);
+    }
+    public function share(Request $request)
+    {
+        return Inertia::render('share', [
+            'token' => $request->token,
+        ]);
+    }
+
+    public function download(Request $request)
+    {
+
+        $token = $request->token;
+
+        // Generar QR
+        $logoPath = public_path('logo.png');
+        $logoData = base64_encode(file_get_contents($logoPath));
+
+        // Generar PDF
+        $pdf = PDF::loadView('pdf.ticket', ['logoData' => $logoData, 'token' => $token])
+            ->setPaper([0, 0, 226.77, 425.2], 'portrait');
+
+        // $pdf->save(public_path('tickest.pdf'));
+        return $pdf->download('ticket.pdf');
+    }
+
+    public function downloadPDF($token)
+    {
+        $logoPath = public_path('logo.png');
+        $logoData = base64_encode(file_get_contents($logoPath));
+
+        // Generar PDF
+        $pdf = PDF::loadView('pdf.ticket', ['logoData' => $logoData, 'token' => $token]);
+
+        // $pdf->save(public_path('tickest.pdf'));
+        return $pdf->download('tickes.pdf');
+    }
+
+    public function generatePdfWithQr($token)
+    {
+        // Generar QR
+        $logoPath = public_path('logo.png');
+        $logoData = base64_encode(file_get_contents($logoPath));
+
+        // Generar PDF
+        $pdf = PDF::loadView('pdf.ticket', ['logoData' => $logoData, 'token' => $token])
+            ->setPaper([0, 0, 226.77, 425.2], 'portrait');
+
+        // $pdf->save(public_path('tickest.pdf'));
+        return $pdf->download('tickes.pdf');
     }
 }
