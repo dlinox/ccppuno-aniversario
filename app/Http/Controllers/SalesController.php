@@ -86,7 +86,7 @@ class SalesController extends Controller
             });
         } catch (\Throwable $th) {
 
-            return redirect()->back()->withErrors('Ocurrió un error inesperado, vuelva a intentarlo en unos minutos.');
+            return redirect()->back()->withErrors($th->getMessage());
         }
     }
 
