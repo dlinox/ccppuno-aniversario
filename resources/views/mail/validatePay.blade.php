@@ -9,11 +9,14 @@
 
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
 
+    <h2 style="padding-bottom: 10px;">Detalles de Venta</h1>
+    <br>
+    <br>
     <h2 style="border-bottom: 1px solid #e1e1e1; padding-bottom: 10px;">Detalles de Venta</h2>
     <p>
       ID de Venta: {{ $sale['id'] }}<br>
       Cantidad: {{ $sale['quantity'] }}<br>
-      Total: ${{ $sale['total'] }}<br>
+      Total: S/. {{ $sale['total'] }}<br>
       Fecha: {{ $sale['date'] }}<br>
       Estado: {{ $sale['status'] }}<br>
       URL Base: {{ url('/') }}
@@ -37,12 +40,18 @@
 
       @if($ticket['ticketId'] == 1)
       BOLETO: HABIL
+      <br>
+      <br>
+      <br>
 
-      <a href="{{ route('share', ['token' => $ticket['token']]) }}" style="background-color: #007BFF; padding: 10px 15px; color: white; text-decoration: none; border-radius: 3px;">Enviar a Ruta (Hábil)</a>
+      <a href="{{ route('share', ['token' => $ticket['token']]) }}" style="background-color: #007BFF; padding: 10px 15px; color: white; text-decoration: none; border-radius: 3px;">Ver  Boleto </a>
       @elseif($ticket['ticketId'] == 2)
       BOLETO: INHABIL PUBLICO EN GENERAL
+      <br>
+      <br>
+      <br>
 
-      <a href="{{ route('share', ['token' => $ticket['token']]) }}" style="background-color: #007BFF; padding: 10px 15px; color: white; text-decoration: none; border-radius: 3px;">Enviar a Ruta (Inhábil)</a>
+      <a href="{{ route('share', ['token' => $ticket['token']]) }}" style="background-color: #007BFF; padding: 10px 15px; color: white; text-decoration: none; border-radius: 3px;">Ver  Boleto</a>
       @endif
     </div>
     @endforeach
